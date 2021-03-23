@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.webrtc.ecl.ntt.com/skyway-4.3.0.js"></script>
+    <title>多眼カメラサンプル_クライアント側</title>
+</head>
+<body>
+  発信ボタンを押下してください。<br>
+  <input type="text" id="HostPeerid"><br>
+  <button id="Outgoing">発信</button><br>
+  <video id="HostVideo" height="1080px" width="5184px"autoplay muted playsinline></video>
+</body>
+<script>
+
+  /* Peerを作成する */
+  const peer = new Peer(
+  {
+    key: "bae7adad-07c3-4fee-a194-9fe29559c740",
+    debug: 3
+  });
+
+  /* ホストの映像を取得する準備 */
+  document.getElementById('Outgoing').onclick = () => {
+    let localStream;
+    const HostID = document.getElementById('HostPeerid').value;
+    const videoConnect = peer.call(HostID,localStream, {videoCodec: 'VP9', videoBandwidth: 16000});
+    setEventListener(videoConnect);
+ };
+
+  /* ホストの映像を再生する */
+  const setEventListener = videoConnect => {
+    videoConnect.on('stream', stream => {
+      /* ホストのVideoの要素を取り出し、カメラ映像を再生 */
+      const HostVideo = document.getElementById('HostVideo')
+      HostVideo.srcObject = stream;
+      HostVideo.play();
+    });
+  }
+
+</script>
+</html>
+
